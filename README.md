@@ -81,6 +81,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 7_Finish Create Section.  
 8_Finish Profile Section.  
 9_Finish Settings Section.  
+10_Finish Logout Section.  
 
 
 
