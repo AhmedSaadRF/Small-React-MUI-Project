@@ -78,6 +78,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 4_Finish Root Section.  
 5_Finish Not Found Section.  
 6_Finish Home Section.  
+7_Finish Create Section.  
 
 
 
