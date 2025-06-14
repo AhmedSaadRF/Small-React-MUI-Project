@@ -50,8 +50,8 @@ export default function Create() {
         variant="filled"
       />
 
-      <ColorButton onClick={(params) => {
-        fetch("http://localhost:3000/mydata", {
+      <ColorButton onClick={() => {
+        fetch("../../data/db.json", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"

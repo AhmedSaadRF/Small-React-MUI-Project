@@ -7,13 +7,13 @@ export default function Home() {
   const [mydata, setmydata] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/mydata")
+    fetch("../../data/db.json")
       .then((response) => response.json())
       .then((data) => setmydata(data));
   }, []);
 
   const handleDelete = (item) => {
-    fetch(`http://localhost:3000/mydata/${item.id}`, {
+    fetch(`../../data/db.json/${item.id}`, {
       method: "DELETE",
     });
 
