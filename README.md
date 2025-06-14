@@ -77,6 +77,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 3_Finish Drawer Section.  
 4_Finish Root Section.  
 5_Finish Not Found Section.  
+6_Finish Home Section.  
 
 
 
