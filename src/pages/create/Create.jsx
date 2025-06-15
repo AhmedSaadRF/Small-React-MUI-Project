@@ -1,35 +1,57 @@
-import { Box, Button, InputAdornment, styled, TextField } from "@mui/material"
-import "./Create.css"
-import { purple } from "@mui/material/colors";
-import { ChevronRight } from "@mui/icons-material";
+import { Box, Button, InputAdornment, TextField } from "@mui/material";
+import "./Create.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const ColorButton = styled(Button)(({ theme }) => ({
-  color: theme.palette.getContrastText(purple[500]),
-  // @ts-ignore
-  backgroundColor: theme.palette.ahmed.main,
-  '&:hover': {
-    Scale: "0.9"
-  },
-}));
-
 export default function Create() {
-  const [title, settitle] = useState("");
-  const [price, setprice] = useState(0);
   const navigate = useNavigate();
+  const [title, settitle] = useState("");
+  const [price, setprice] = useState("");
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+
+    // Get existing expenses from localStorage
+    const existingData = JSON.parse(localStorage.getItem("expenses")) || [];
+
+    // Create new expense object
+    const newExpense = {
+      id: Date.now(), // Unique ID
+      title: title.trim(),
+      price: Number(price),
+      date: new Date().toISOString().split("T")[0], // Current date
+    };
+
+    // Update data
+    const updatedData = [...existingData, newExpense];
+
+    // Save to localStorage
+    localStorage.setItem("expenses", JSON.stringify(updatedData));
+
+    // Navigate to home
+    navigate("/");
+  };
 
   return (
-    <Box autoComplete="off" component="form" sx={{ width: "380px" }}>
-      <TextField 
+    <Box
+      onSubmit={handleSubmit}
+      autoComplete="off"
+      component="form"
+      sx={{ width: "380px" }}
+    >
+      <TextField
+        autoComplete="off"
         onChange={(e) => settitle(e.target.value)}
+        value={title}
         fullWidth
         label="Transaction Title"
         sx={{ mt: "22px", display: "block" }}
         slotProps={{
           input: {
-            startAdornment: <InputAdornment position="start">&#128073;</InputAdornment>,
+            startAdornment: (
+              <InputAdornment position="start">&#128073;</InputAdornment>
+            ),
           },
         }}
         variant="filled"
@@ -38,7 +60,9 @@ export default function Create() {
       <br />
 
       <TextField
-        onChange={(e) => setprice(Number(e.target.value))}
+        autoComplete="off"        
+        value={price}
+        onChange={(e) => setprice(e.target.value)}
         fullWidth
         label="Transaction Title"
         sx={{ mt: "22px", display: "block" }}
@@ -50,21 +74,15 @@ export default function Create() {
         variant="filled"
       />
 
-      <ColorButton onClick={() => {
-        fetch("../../data/db.json", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({price, title})
-        }).then(() => {
-          navigate("/");
-        })
-      }
-      } sx={{mt: "22px"}} variant="contained">
-        Submit 
-        <ChevronRight />
-      </ColorButton>
+      <Button
+        type="submit"
+        variant="contained"
+        fullWidth
+        size="large"
+        sx={{ py: 1.5, fontWeight: 600, mt: "22px" }}
+      >
+        Submit
+      </Button>
     </Box>
-  )
+  );
 }
