@@ -6,70 +6,63 @@ import { useEffect, useState } from "react";
 export default function Home() {
   const [mydata, setmydata] = useState([]);
 
+  // Load data from localStorage on component mount
   useEffect(() => {
-    fetch("../../data/db.json")
-      .then((response) => response.json())
-      .then((data) => setmydata(data));
+    const storedData = JSON.parse(localStorage.getItem("expenses")) || [];
+    setmydata(storedData);
   }, []);
 
   const handleDelete = (item) => {
-    fetch(`../../data/db.json/${item.id}`, {
-      method: "DELETE",
-    });
-
-    const newArr = mydata.filter((myObject) => {
-      return myObject.id !== item.id;
-    });
-
+    // Create new array without the deleted item
+    const newArr = mydata.filter(myObject => myObject.id !== item.id);
+    
+    // Update state
     setmydata(newArr);
-  }
+    
+    // Update localStorage with modified array
+    localStorage.setItem("expenses", JSON.stringify(newArr));
+  };
 
-
-
-  let totalPrice = 0;
+  // Calculate total price
+  const totalPrice = mydata.reduce((sum, item) => sum + item.price, 0);
 
   return (
     <Box>
-      {mydata.map((item) => {
-        totalPrice += item.price;
-        return (
-          <Paper
-            key={item.id}
+      {mydata.map((item) => (
+        <Paper
+          key={item.id}
+          sx={{
+            position: "relative",
+            width: "366px",
+            display: "flex",
+            justifyContent: "space-between",
+            mt: "22px",
+            pt: "27px",
+            pb: "7px",
+          }}
+        >
+          <Typography sx={{ ml: "16px", fontSize: "1.3em" }} variant="h6">
+            {item.title}
+          </Typography>
+          <Typography
             sx={{
-              position: "relative",
-              width: "366px",
-              display: "flex",
-              justifyContent: "space-between",
-              mt: "22px",
-              pt: "27px",
-              pb: "7px",
+              mr: "33px",
+              fontWeight: 500,
+              fontSize: "1.4em",
+              opacity: "0.8",
             }}
+            variant="h6"
           >
-            <Typography sx={{ ml: "16px", fontSize: "1.3em" }} variant="h6">
-              {item.title}
-            </Typography>
-            <Typography
-              sx={{
-                mr: "33px",
-                fontWeight: 500,
-                fontSize: "1.4em",
-                opacity: "0.8",
-              }}
-              variant="h6"
-            >
-              ${item.price}
-            </Typography>
-            <IconButton
-              onClick={() => {
-                handleDelete(item)
-              }}
-              sx={{ position: "absolute", top: "0", right: "0" }}
-            >
-              <Close sx={{ fontSize: "20px" }} />
-            </IconButton>
-          </Paper>
-        );
-      })}
+            ${item.price}
+          </Typography>
+          <IconButton
+            onClick={() => handleDelete(item)}
+            sx={{ position: "absolute", top: "0", right: "0" }}
+          >
+            <Close sx={{ fontSize: "20px" }} />
+          </IconButton>
+        </Paper>
+      ))}
 
       <Typography mt="55px" textAlign="center" variant="h6">
         👉 You Spend ${totalPrice}
